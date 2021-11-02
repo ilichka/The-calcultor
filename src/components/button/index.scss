@@ -1,0 +1,107 @@
+//white theme colors
+$button_background_color1: #ade2ff;
+$button_background_color2: linear-gradient(
+  129.7deg,
+  rgba(255, 255, 255, 0.6) -9.69%,
+  rgba(255, 255, 255, 0.4) 114.23%
+);
+$button_background_color3: #19acff;
+$button_background_color4: #fff;
+
+$button_text_color1: #38b9ff;
+$button_text_color2: #109dff;
+$button_text_color3: #858585;
+$button_text_color4: #7cc9ff;
+$button_text_color5: #b2daff;
+
+$button_shadow_color1: -9px 13px 23px rgba(0, 163, 255, 0.65),
+  inset -3px 4px 11px #b0dfff;
+
+//dark-theme
+$dark_button_background_color1: #005db2;
+$dark_button_background_color2: #616161;
+$dark_button_background_color3: #19acff;
+$dark_button_background_color4: #303136;
+
+$dark_button_text_color1: #29a8ff;
+$dark_button_text_color2: #339dff;
+$dark_button_text_color3: #a5a5a5;
+$dark_button_text_color4: #29a8ff;
+$dark_button_text_color5: #b2daff;
+
+$dark_button_shadow_color1: none;
+
+.button {
+  user-select: none;
+  cursor: pointer;
+  width: 62px;
+  padding: 7px 0;
+  background-color: $button_background_color4;
+  border-radius: 12px;
+  color: $button_text_color1;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 26px;
+  line-height: 48px;
+  text-align: center;
+
+  &.math-operation {
+    background-color: $button_background_color1;
+    color: $button_text_color2;
+  }
+
+  &.memory {
+    padding: 0;
+    line-height: 40px;
+    color: $button_text_color4;
+  }
+
+  &.height-1 {
+    padding: 27px 0;
+  }
+
+  &.width-1 {
+    width: 144px;
+  }
+
+  &.equals {
+    box-shadow: $button_shadow_color1;
+    background-color: $button_background_color3;
+    color: $button_text_color5;
+  }
+
+  &.action {
+    background: $button_background_color2;
+    color: $button_text_color3;
+  }
+}
+
+body {
+  &.dark-theme {
+    .button {
+      background-color: $dark_button_background_color4;
+      color: $dark_button_text_color1;
+
+      &.math-operation {
+        background-color: $dark_button_background_color1;
+        color: $dark_button_text_color2;
+      }
+
+      &.memory {
+        color: $dark_button_text_color4;
+      }
+
+      &.equals {
+        background: $dark_button_background_color3;
+        color: $dark_button_text_color5;
+        box-shadow: $dark_button_shadow_color1;
+      }
+
+      &.action {
+        background: $dark_button_background_color2;
+        color: $dark_button_text_color3;
+      }
+    }
+  }
+}
