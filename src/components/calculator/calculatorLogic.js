@@ -262,7 +262,7 @@ class Calculator {
   };
 
   updateCurrent = (value) => {
-    if (this.current === 0) {
+    if (this.current === 0 && value!== ".") {
       this.current += +value;
     } else {
       this.current += value;
@@ -275,13 +275,17 @@ class Calculator {
   };
 
   updateMemory = (value, type) => {
-    console.log(this.current, value);
-    if (type === "decrease") {
-      this.memory -= value;
-    } else if (type === "increase") {
-      this.memory += value;
-    } else if (type === "set") {
-      this.memory = value;
+    console.log(this.current, +value);
+    switch (type) {
+      case "decrease":
+        this.memory -= +value;
+        break;
+      case "increase":
+        this.memory += +value;
+        break;
+      case "set":
+        this.memory = +value;
+        break;
     }
     console.log(this.memory);
   };

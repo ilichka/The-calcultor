@@ -24,11 +24,23 @@ const soloMathOperationType = (command) => {
 
 const numberType = (value) => {
   if (calculator.getCurrentOperation()) {
+    if(value === ".") {
+      const dotExist = String(calculator.getCurrentOperand()).indexOf(".") !== -1;
+      if(dotExist) {
+        return;
+      }
+    }
     calculator.updateOperand(value);
     document.getElementById("calculations-input").value += value;
   } else {
+    if(value === ".") {
+      const dotExist = String(calculator.getCurrentValue()).indexOf(".") !== -1;
+      if(dotExist) {
+        return;
+      }
+    }
     calculator.updateCurrent(value);
-    if (document.getElementById("calculations-input").value === "0") {
+    if (document.getElementById("calculations-input").value === "0" && value !== ".") {
       document.getElementById("calculations-input").value = value;
     } else {
       document.getElementById("calculations-input").value += value;
@@ -58,6 +70,27 @@ const ACType = () => {
   calculator.clearCommands();
   document.getElementById("calculations-input").value = "0";
 };
+
+const dotType = () => {
+  let value = '.';
+  if (calculator.getCurrentOperation()) {
+    if(!calculator.getCurrentOperand()) {
+      value = `0${value}`;
+    }
+    calculator.updateOperand(value);
+    document.getElementById("calculations-input").value += value;
+  } else {
+    if(!calculator.getCurrentValue()) {
+      value = `0${value}`;
+    }
+    calculator.updateCurrent(value);
+    if (document.getElementById("calculations-input").value === "0") {
+      document.getElementById("calculations-input").value = value;
+    } else {
+      document.getElementById("calculations-input").value += value;
+    }
+  }
+}
 
 const setCurrentToInput = () => {
   document.getElementById("result-input").value = calculator.getCurrentValue();
@@ -125,6 +158,8 @@ const getEventListenerByType = (type, command, value) => {
       return memoryType.bind(this, value);
     case "backspace":
       return backspaceType;
+    case "dot":
+      return dotType;
     default:
       throw new Error("The command is not defined");
   }
