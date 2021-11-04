@@ -17,7 +17,7 @@ import {
   RootIn3,
   RootInY,
   FactorialCommand,
-} from "./calculatorLogic";
+} from "./calculatorCommands";
 
 export const calculator = new Calculator();
 
