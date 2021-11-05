@@ -75,6 +75,11 @@ $dark_button_shadow_color1: none;
     background: $button_background_color2;
     color: $button_text_color3;
   }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
 }
 
 body {

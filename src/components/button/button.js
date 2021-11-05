@@ -1,37 +1,38 @@
 import "./index.scss";
-import {mathOperationType, memoryType, ACType, equalsType, soloMathOperationType, backspaceType, setCurrentToInput, undoType, numberType} from "./buttonTypes"
+import {doubleOperandMathOperation, singleOperandMathOperation, number, equals, undo, AC, backspace, memory} from "./buttonTypes";
 
-const getEventListenerByType = (type, command, value) => {
+const getEventListenerByType = (type, value) => {
   switch (type) {
-    case "math-operation":
-      return mathOperationType.bind(this, value, command);
-    case "solo-math-operation":
-      return soloMathOperationType.bind(this, command);
+    case "double-math-operation":
+      return doubleOperandMathOperation.bind(this, value);
+    case "single-math-operation":
+      return singleOperandMathOperation.bind(this, value);
     case "number":
-      return numberType.bind(this, value);
+      return number.bind(this, value)
     case "equals":
-      return equalsType;
+      return equals;
     case "undo":
-      return undoType;
+      return undo;
     case "AC":
-      return ACType;
-    case "memory":
-      return memoryType.bind(this, value);
+      return AC;
     case "backspace":
-      return backspaceType;
+      return backspace;
+    case "memory":
+      return memory.bind(this, value);
     default:
       throw new Error("The command is not defined");
   }
 };
 
-export default (value, buttonClass, command, updateInput, type) => {
+export default (value, buttonClass, type) => {
   const button = document.createElement("div");
   button.classList.add("button", ...buttonClass);
   button.innerText = value;
   button.addEventListener("click", () => {
-    const event = getEventListenerByType(type, command, value);
-    event();
-    setCurrentToInput();
+    if(!button.classList.contains("disabled")) {
+      const event = getEventListenerByType(type, value);
+      event();
+    }
   });
   return button;
 };

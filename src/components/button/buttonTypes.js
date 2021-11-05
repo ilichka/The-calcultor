@@ -1,90 +1,127 @@
-import { calculator } from "../calculator/calculator";
+import {calculator} from "../calculator/calculator";
+import {AddCommand} from "../calculator/commands/add";
+import {PercentCommand} from "../calculator/commands/percent";
+import {SubCommand} from "../calculator/commands/sub";
+import {MulCommand} from "../calculator/commands/mul";
+import {DivCommand} from "../calculator/commands/div";
+import {TenToThePowerOfCommand} from "../calculator/commands/tenToThePowerOf";
+import {OneDivValueCommand} from "../calculator/commands/oneDivValue";
+import {ChangeSignCommand} from "../calculator/commands/changeSign";
+import {PowInTwoCommand} from "../calculator/commands/powInTwo";
+import {PowInThreeCommand} from "../calculator/commands/powInThree";
+import {PowInYCommand} from "../calculator/commands/powInY";
+import {RootInTwoCommand} from "../calculator/commands/rootInTwo";
+import {RootInThreeCommand} from "../calculator/commands/rootInThree";
+import {RootInYCommand} from "../calculator/commands/rootInY";
+import {FactorialCommand} from "../calculator/commands/factorial";
+import {updateCalculationInput, enableButtons} from "../../utils/utils";
 
-const mathOperationType = (value, command) => {
-  if (calculator.getCurrentOperand()) {
-    const currentOperation = calculator.getCurrentOperation();
-    const currentOperand = calculator.getCurrentOperand();
-    calculator.execute(currentOperation(currentOperand));
-    calculator.setCurrentOperation(command);
-  } else {
-    calculator.setCurrentOperation(command);
-  }
-  document.getElementById(
-      "calculations-input"
-  ).value = `${calculator.getCurrentValue()} ${value} `;
+const CALCULATOR_COMMANDS = {
+  "+": AddCommand,
+  "%": PercentCommand,
+  "—": SubCommand,
+  "*": MulCommand,
+  "/": DivCommand,
+  "10^y": TenToThePowerOfCommand,
+  "1/x": OneDivValueCommand,
+  "+/-": ChangeSignCommand,
+  "x^2": PowInTwoCommand,
+  "x^3": PowInThreeCommand,
+  "^": PowInYCommand,
+  "2√": RootInTwoCommand,
+  "3√": RootInThreeCommand,
+  "√": RootInYCommand,
+  "x!": FactorialCommand,
 };
 
-const soloMathOperationType = (command) => {
-  const currentValue = calculator.getCurrentValue();
-  calculator.execute(command(currentValue));
-  document.getElementById("calculations-input").value =
-      calculator.getCurrentValue();
-};
-
-const numberType = (value) => {
-  if (calculator.getCurrentOperation()) {
-    if(value === ".") {
-      const dotExist = String(calculator.getCurrentOperand()).indexOf(".") !== -1;
-      if(dotExist) {
-        return;
-      }
-    }
-    calculator.updateOperand(value);
-    document.getElementById("calculations-input").value += value;
-  } else {
-    if(value === ".") {
-      const dotExist = String(calculator.getCurrentValue()).indexOf(".") !== -1;
-      if(dotExist) {
-        return;
-      }
-    }
-    calculator.updateCurrent(value);
-    if (document.getElementById("calculations-input").value === "0" && value !== ".") {
-      document.getElementById("calculations-input").value = value;
+const doubleOperandMathOperation = (value) => {
+  const string = document.getElementById("calculations-input").value;
+  const operationSign = getOperationSign(string);
+  if (operationSign) {
+    const operandsArray = getOperands(string, operationSign[0]);
+    const leftOperand = +operandsArray[0];
+    const rightOperand = +operandsArray[1];
+    if (operandsArray[1].length) {
+      const command = new CALCULATOR_COMMANDS[operationSign[0]](leftOperand, rightOperand);
+      calculator.execute(command);
+      const current = calculator.getCurrentValue();
+      updateCalculationInput("set", current, "", value)
+      updateResultInput(current);
     } else {
-      document.getElementById("calculations-input").value += value;
+      updateCalculationInput("set", leftOperand, "", value)
     }
+  } else {
+    updateCalculationInput("set", string, "", value)
   }
 };
 
-const equalsType = () => {
-  if (calculator.getCurrentOperand()) {
-    const currentOperation = calculator.getCurrentOperation();
-    const currentOperand = calculator.getCurrentOperand();
-    calculator.execute(currentOperation(currentOperand));
-  }
-  calculator.setCurrentOperation(null);
-  document.getElementById("calculations-input").value =
-      calculator.getCurrentValue();
-};
-
-const undoType = () => {
-  calculator.undo();
-};
-
-const ACType = () => {
-  calculator.setCurrent(0);
-  calculator.setOperand("");
-  calculator.setCurrentOperation(null);
-  calculator.clearCommands();
-  document.getElementById("calculations-input").value = "0";
-};
-
-const setCurrentToInput = () => {
-  document.getElementById("result-input").value = calculator.getCurrentValue();
-};
-
-const memoryType = (value) => {
+const singleOperandMathOperation = (value) => {
+  equals();
+  const string = document.getElementById("calculations-input").value ? document.getElementById("calculations-input").value : "0";
+  const command = new CALCULATOR_COMMANDS[value](+string);
+  calculator.execute(command);
   const current = calculator.getCurrentValue();
-  switch (value) {
+  updateResultInput(current);
+  updateCalculationInput("set", current, "", "")
+};
+
+const number = (value) => {
+  updateCalculationInput("add", value)
+};
+
+const equals = () => {
+  const string = document.getElementById("calculations-input").value;
+  const operationSign = getOperationSign(string);
+  if (operationSign) {
+    const operandsArray = getOperands(string, operationSign[0]);
+    const leftOperand = +operandsArray[0];
+    const rightOperand = +operandsArray[1];
+    if (operandsArray[1].length) {
+      const command = new CALCULATOR_COMMANDS[operationSign[0]](leftOperand, rightOperand);
+      calculator.execute(command);
+      const current = calculator.getCurrentValue();
+      updateCalculationInput("set", current, "", "");
+      updateResultInput(current);
+    } else {
+      updateCalculationInput("set", leftOperand, "", "")
+    }
+  } else {
+    updateCalculationInput("set", string, "", "");
+    updateResultInput(string);
+  }
+};
+
+const undo = () => {
+  calculator.undo();
+  const current = calculator.getCurrentValue();
+  const undoRow = calculator.getUndoRow();
+  updateCalculationInput("set", undoRow, "", "");
+  updateResultInput(current);
+};
+
+const AC = () => {
+  calculator.setCurrentValue(0);
+  updateCalculationInput("set", "0", "", "");
+  updateResultInput("0");
+  enableButtons();
+};
+
+const backspace = () => {
+  updateCalculationInput("delete")
+};
+
+const memory = (operation) => {
+  equals();
+  const value = document.getElementById("calculations-input").value;
+  switch (operation) {
     case "mc":
-      calculator.updateMemory(current, "set");
+      calculator.updateMemory(value, "set");
       break;
     case "m+":
-      calculator.updateMemory(current, "increase");
+      calculator.updateMemory(value, "increase");
       break;
     case "m-":
-      calculator.updateMemory(current, "decrease");
+      calculator.updateMemory(value, "decrease");
       break;
     case "mr":
       calculator.updateMemory(0, "set");
@@ -94,28 +131,16 @@ const memoryType = (value) => {
   }
 };
 
-const backspaceType = () => {
-  if (calculator.getCurrentOperation() && calculator.getCurrentOperand()) {
-    const currentOperand = String(calculator.getCurrentOperand());
-    calculator.setOperand(currentOperand.substr(0, currentOperand.length - 1));
-    const { value } = document.getElementById("calculations-input");
-    document.getElementById("calculations-input").value = value.substr(
-        0,
-        value.length - 1
-    );
-  } else if (
-      calculator.getCurrentOperation() &&
-      !calculator.getCurrentOperand()
-  ) {
-    calculator.setCurrentOperation(null);
-    document.getElementById("calculations-input").value =
-        calculator.getCurrentValue();
-  } else {
-    const current = String(calculator.getCurrentValue());
-    calculator.setCurrent(current.substr(0, current.length - 1));
-    document.getElementById("calculations-input").value =
-        calculator.getCurrentValue();
-  }
+const updateResultInput = (value) => {
+  document.getElementById("result-input").value = value;
 };
 
-export {mathOperationType, memoryType, ACType, equalsType, soloMathOperationType, backspaceType, setCurrentToInput, undoType, numberType}
+const getOperationSign = (string) => {
+  return string.match(/[—/+*^√]/);
+};
+
+const getOperands = (string, operationSign) => {
+  return string.split(operationSign)
+};
+
+export {doubleOperandMathOperation, singleOperandMathOperation, number, equals, undo, AC, backspace, memory}

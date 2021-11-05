@@ -1,23 +1,6 @@
 import "./index.scss";
 import button from "../button/button";
 import Calculator from "./calculatorLogic";
-import {
-  AddCommand,
-  SubCommand,
-  DivCommand,
-  MulCommand,
-  PercentCommand,
-  TenInDegree,
-  OneDivValue,
-  ChangeSign,
-  PowIn2,
-  PowIn3,
-  PowInY,
-  RootIn2,
-  RootIn3,
-  RootInY,
-  FactorialCommand,
-} from "./calculatorCommands";
 
 export const calculator = new Calculator();
 
@@ -26,75 +9,64 @@ const BUTTONS = [
     {
       value: "%",
       classList: ["math-operation"],
-      command: (value) => new PercentCommand(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "+/-",
       classList: ["math-operation"],
-      command: (value) => new ChangeSign(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "x^2",
       classList: ["math-operation"],
-      command: (value) => new PowIn2(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "x^3",
       classList: ["math-operation"],
-      command: (value) => new PowIn3(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "^",
       classList: ["math-operation"],
-      command: (value) => new PowInY(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
   ],
   [
     {
       value: "10^y",
       classList: ["math-operation"],
-      command: (value) => new TenInDegree(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "1/x",
       classList: ["math-operation"],
-      command: (value) => new OneDivValue(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "2√",
       classList: ["math-operation"],
-      command: (value) => new RootIn2(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "3√",
       classList: ["math-operation"],
-      command: (value) => new RootIn3(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
     {
       value: "√",
       classList: ["math-operation"],
-      command: (value) => new RootInY(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
     {
       value: "x!",
       classList: ["math-operation"],
-      command: (value) => new FactorialCommand(value),
-      type: "solo-math-operation",
+      type: "single-math-operation",
     },
   ],
   [
     { value: "mc", classList: ["memory"], type: "memory" },
-    { value: "AC", classList: ["action"], type: "AC" },
+    { value: "AC", classList: ["action", "AC"], type: "AC" },
     { value: "7", classList: [], type: "number" },
     { value: "4", classList: [], type: "number" },
     { value: "1", classList: [], type: "number" },
@@ -113,8 +85,7 @@ const BUTTONS = [
     {
       value: "/",
       classList: ["math-operation"],
-      command: (value) => new DivCommand(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
     { value: "9", classList: [], type: "number" },
     { value: "6", classList: [], type: "number" },
@@ -130,20 +101,17 @@ const BUTTONS = [
     {
       value: "*",
       classList: ["math-operation"],
-      command: (value) => new MulCommand(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
     {
-      value: "-",
+      value: "—",
       classList: ["math-operation"],
-      command: (value) => new SubCommand(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
     {
       value: "+",
       classList: ["math-operation", "height-1"],
-      command: (value) => new AddCommand(value),
-      type: "math-operation",
+      type: "double-math-operation",
     },
     {
       value: "=",
@@ -164,8 +132,6 @@ const createButtons = () => {
         button(
           buttonObj.value,
           buttonObj.classList,
-          buttonObj.command,
-          buttonObj.updateInput,
           buttonObj.type
         )
       );
