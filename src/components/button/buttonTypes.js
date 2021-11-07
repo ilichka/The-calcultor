@@ -69,7 +69,7 @@ const number = (value) => {
   updateCalculationInput("add", value)
 };
 
-const equals = () => {
+const equals = (memory) => {
   const string = document.getElementById("calculations-input").value;
   const operationSign = getOperationSign(string);
   if (operationSign) {
@@ -87,7 +87,7 @@ const equals = () => {
     }
   } else {
     updateCalculationInput("set", string, "", "");
-    updateResultInput(string);
+    !memory && updateResultInput(string);
   }
 };
 
@@ -111,22 +111,35 @@ const backspace = () => {
 };
 
 const memory = (operation) => {
-  equals();
   const value = document.getElementById("calculations-input").value;
   switch (operation) {
     case "mc":
       calculator.updateMemory(0, "set");
       break;
     case "m+":
+      equals(true);
       calculator.updateMemory(value, "increase");
       break;
     case "m-":
+      equals(true);
       calculator.updateMemory(value, "decrease");
       break;
     case "mr":
+      const calculationInput = document.getElementById("calculations-input").value;
+      const operationSing = getOperationSign(calculationInput);
       const memoryValue = calculator.getMemory()
-      updateCalculationInput("set", memoryValue, "", "");
-      updateResultInput(memoryValue);
+      if(operationSing) {
+        const operands = getOperands(calculationInput, operationSing[0]);
+        if(operands[1].length) {
+          updateCalculationInput("set", operands[0], memoryValue, operationSing);
+        } else {
+          updateCalculationInput("add", memoryValue, "", "");
+        }
+      } else {
+        updateCalculationInput("set", memoryValue, "", "");
+      }
+
+      //updateResultInput(memoryValue);
       break;
     case "ms":
       calculator.updateMemory(value, "set");
