@@ -40,6 +40,8 @@ class Calculator {
 
   getUndoRow = () => this.undoRow;
 
+  getMemory = () => this.memory;
+
   execute = (command) => {
     this.current = command.execute();
     this.commands.push(command);

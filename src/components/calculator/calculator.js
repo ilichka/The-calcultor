@@ -31,6 +31,7 @@ const BUTTONS = [
       classList: ["math-operation"],
       type: "double-math-operation",
     },
+    { value: "mr", classList: ["memory"], type: "memory" },
   ],
   [
     {
@@ -97,7 +98,7 @@ const BUTTONS = [
     { value: ".", classList: [], type: "number" },
   ],
   [
-    { value: "mr", classList: ["memory"], type: "memory" },
+    { value: "ms", classList: ["memory"], type: "memory" },
     {
       value: "*",
       classList: ["math-operation"],

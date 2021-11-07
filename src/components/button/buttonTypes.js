@@ -115,7 +115,7 @@ const memory = (operation) => {
   const value = document.getElementById("calculations-input").value;
   switch (operation) {
     case "mc":
-      calculator.updateMemory(value, "set");
+      calculator.updateMemory(0, "set");
       break;
     case "m+":
       calculator.updateMemory(value, "increase");
@@ -124,7 +124,12 @@ const memory = (operation) => {
       calculator.updateMemory(value, "decrease");
       break;
     case "mr":
-      calculator.updateMemory(0, "set");
+      const memoryValue = calculator.getMemory()
+      updateCalculationInput("set", memoryValue, "", "");
+      updateResultInput(memoryValue);
+      break;
+    case "ms":
+      calculator.updateMemory(value, "set");
       break;
     default:
       throw new Error("The command is not defined");
